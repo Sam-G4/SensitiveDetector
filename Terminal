@@ -1,0 +1,120 @@
+###Error run; there was a mistake 
+ [ if (volumeName == "PhysicalSiCD_dE") {
+  myEvAction-> AddEdep_dE(edep);
+  }
+  
+  if (volumeName == "PhysicalSiCD_E") {
+  myEvAction-> AddEdep_dE(edep);
+  }] this is what I wrote in SteppingAction.cc and I was getting these results. 
+
+### Run 0 starts.
+Opened output.root for writing analysis data.
+--> Event 0 starts.
+
+===== Summary: Events with energy deposited in dE: 762488 / 10000000 =====
+
+===== Summary: Events with energy deposited in E: 0 / 10000000 =====
+Analysis data written and file closed.
+Graphics systems deleted.
+Visualization Manager deleting...
+# This is for isotropic emission of alpha particles of energy 20MeV
+#ParticleGun placed at -7.0 Cm
+#Only dE detector is getting the energy deposition.
+#According to calculations the efficiency must be around ~0.088 but here for 1Cr particles we get Eff ~ 0.076
+#The similarity between theoretical and simulated efficiencies may increase with increase in no. of events.
+
+#Tried increasing no. of events to 10 Cr., still not close 
+Opened output.root for writing analysis data.
+--> Event 0 starts.
+
+===== Summary: Events with energy deposited in dE: 7627938 / 100000000 =====
+
+===== Summary: Events with energy deposited in E: 0 / 100000000 =====
+Analysis data written and file closed.
+Graphics systems deleted.
+Visualization Manager deleting...
+#Why????????????????????????????????????????????????????
+
+#On increasing dE detector thickness from 65 micron to 4 mm (half height=2mm)
+Opened output.root for writing analysis data.
+--> Event 0 starts.
+
+===== Summary: Events with energy deposited in dE: 7914 / 100000 =====
+
+===== Summary: Events with energy deposited in E: 0 / 100000 =====
+Analysis data written and file closed.
+Graphics systems deleted.
+Visualization Manager deleting..
+Eff ~ 0.079
+
+#For half thickness=8 mm
+
+===== Summary: Events with energy deposited in dE: 9223 / 100000 ===== //How its more than geometric efficiency??????????
+
+===== Summary: Events with energy deposited in E: 0 / 100000 ===
+
+
+#For half thicknes = 2 cm
+===== Summary: Events with energy deposited in dE: 12714 / 100000 =====
+
+===== Summary: Events with energy deposited in E: 0 / 100000 =====
+#Mind you! the Gun is no longer at 7 Cm from detector as the detector is placed at (000) and increasing its width increases the lemgth occupied by it in both -ve and +ve Z-axis. This may be one reason for Simulated Eff>geometric Eff. Also now particles passing from the centre hole can see the extended length and interact wuth the detector.
+-------------------------------------------------------------------------------------------------------------------------
+Then i corrected the stepping action now i am getting following:
+
+===== Summary: Events with energy deposited in dE: 60505 / 1000000 =====
+
+===== Summary: Events with energy deposited in E: 42303 / 1000000 =====
+Analysis data written and file closed.
+Graphics systems deleted.
+Visualization Manager deleting...
+------------------------------------------------------------------------------------------
+
+For detector separation d=6mm, particle energy = 20 MeV, isotropic emission at D=7 cm, we get 
+===== Summary: Events with energy deposited in dE: 60860 / 1000000 =====
+
+===== Summary: Events with energy deposited in E: 54196 / 1000000 =====
+and output root file is copied out of build directory and renamed as 'output_20MeV.root'
+--------------------------------------------------------------------------------------------
+
+After setting particle direction in forward cone of half angle 35 deg we get 
+===== Summary: Events with energy deposited in dE: 672034 / 1000000 =====
+
+===== Summary: Events with energy deposited in E: 599540 / 1000000 =====
+just more number of points, the plot is just the same as before just more dark.
+--------------------------------------------------------------------------------------------
+After introducing a range of random energies from 5Mev to 20 Mev #What a mistake !!!
+
+===== Summary: Events with energy deposited in dE: 671328 / 1000000 =====
+
+===== Summary: Events with energy deposited in E: 549803 / 1000000 =====
+
+Now the plot is coming out to be in the standard form.
+Plot is saved in Nai_edit file as "dE-E_spectrum_range1.jpg"
+-------------------------------------------------------------------------------------------------
+New detailed geometry was built.
+Copy number 0-63 -> dE_Front
+            64-79 -> dE_Back
+            
+            100-163 ->E-Front
+            164-179 ->E_Back
+
+--------------------------------------------------------------------------------------------------
+Sensitive Detector is attached, and histogram are filled inside the SD
+The plot seemed to form a v shaped curve, this is called something i don't rember rn.
+It was because in Det.Cons. mistakenly for E detector:
+
+BuildSiCDDetector(Si, logicWorld,
+                  7.676625 * cm,
+                   7.726625*cm,    // z-position (just behind dE)
+                  0.05* mm,            // thicker================Unit mistake
+                  100,                 // copy number offset to avoid conflicts
+                  G4Colour::Blue(),
+                  G4Colour::White(),    // color
+                  "E",sd);
+this cause dE length> E length. The plot is saved in Si-CD_edit under name "for E-length<lengthdE.jpg"
+
+Later for 0.5*mm, we get the correct pot as we were getting with stepping action.
+Saved in Si-CD_edit as "WithSD.jpg"
+--------------------------------------------------------------------------------------------------------------
+
